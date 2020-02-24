@@ -1,0 +1,193 @@
+
+demos/blink_flash_asm/main.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <main>:
+   0:	20000800 	.word	0x20000800
+   4:	00000151 	.word	0x00000151
+   8:	000001ab 	.word	0x000001ab
+   c:	000001ab 	.word	0x000001ab
+  10:	000001ab 	.word	0x000001ab
+  14:	000001ab 	.word	0x000001ab
+  18:	000001ab 	.word	0x000001ab
+  1c:	000001ab 	.word	0x000001ab
+  20:	000001ab 	.word	0x000001ab
+  24:	000001ab 	.word	0x000001ab
+  28:	000001ab 	.word	0x000001ab
+  2c:	000001ab 	.word	0x000001ab
+  30:	000001ab 	.word	0x000001ab
+  34:	000001ab 	.word	0x000001ab
+  38:	000001ab 	.word	0x000001ab
+  3c:	000001ab 	.word	0x000001ab
+  40:	000001ab 	.word	0x000001ab
+  44:	000001ab 	.word	0x000001ab
+  48:	000001ab 	.word	0x000001ab
+  4c:	000001ab 	.word	0x000001ab
+  50:	000001ab 	.word	0x000001ab
+  54:	000001ab 	.word	0x000001ab
+  58:	000001ab 	.word	0x000001ab
+  5c:	000001ab 	.word	0x000001ab
+  60:	000001ab 	.word	0x000001ab
+  64:	000001ab 	.word	0x000001ab
+  68:	000001ab 	.word	0x000001ab
+  6c:	000001ab 	.word	0x000001ab
+  70:	000001ab 	.word	0x000001ab
+  74:	000001ab 	.word	0x000001ab
+  78:	000001ab 	.word	0x000001ab
+  7c:	000001ab 	.word	0x000001ab
+  80:	000001ab 	.word	0x000001ab
+  84:	000001ab 	.word	0x000001ab
+  88:	000001ab 	.word	0x000001ab
+  8c:	000001ab 	.word	0x000001ab
+  90:	000001ab 	.word	0x000001ab
+  94:	000001ab 	.word	0x000001ab
+  98:	000001ab 	.word	0x000001ab
+  9c:	000001ab 	.word	0x000001ab
+  a0:	000001ab 	.word	0x000001ab
+  a4:	000001ab 	.word	0x000001ab
+  a8:	000001ab 	.word	0x000001ab
+  ac:	000001ab 	.word	0x000001ab
+  b0:	000001ab 	.word	0x000001ab
+  b4:	000001ab 	.word	0x000001ab
+  b8:	000001ab 	.word	0x000001ab
+  bc:	000001ab 	.word	0x000001ab
+  c0:	000001ab 	.word	0x000001ab
+  c4:	000001ab 	.word	0x000001ab
+  c8:	000001ab 	.word	0x000001ab
+  cc:	000001ab 	.word	0x000001ab
+  d0:	000001ab 	.word	0x000001ab
+  d4:	000001ab 	.word	0x000001ab
+  d8:	000001ab 	.word	0x000001ab
+  dc:	000001ab 	.word	0x000001ab
+  e0:	000001ab 	.word	0x000001ab
+  e4:	000001ab 	.word	0x000001ab
+  e8:	000001ab 	.word	0x000001ab
+  ec:	000001ab 	.word	0x000001ab
+  f0:	000001ab 	.word	0x000001ab
+  f4:	000001ab 	.word	0x000001ab
+  f8:	000001ab 	.word	0x000001ab
+  fc:	000001ab 	.word	0x000001ab
+ 100:	000001ab 	.word	0x000001ab
+ 104:	000001ab 	.word	0x000001ab
+ 108:	000001ab 	.word	0x000001ab
+ 10c:	000001ab 	.word	0x000001ab
+ 110:	000001ab 	.word	0x000001ab
+ 114:	000001ab 	.word	0x000001ab
+ 118:	000001ab 	.word	0x000001ab
+ 11c:	000001ab 	.word	0x000001ab
+ 120:	000001ab 	.word	0x000001ab
+ 124:	000001ab 	.word	0x000001ab
+ 128:	000001ab 	.word	0x000001ab
+ 12c:	000001ab 	.word	0x000001ab
+ 130:	000001ab 	.word	0x000001ab
+ 134:	000001ab 	.word	0x000001ab
+ 138:	000001ab 	.word	0x000001ab
+ 13c:	000001ab 	.word	0x000001ab
+ 140:	000001ab 	.word	0x000001ab
+ 144:	000001ab 	.word	0x000001ab
+ 148:	000001ab 	.word	0x000001ab
+ 14c:	000001ab 	.word	0x000001ab
+
+00000150 <_c_entry>:
+
+
+
+_c_entry:
+    /* Enable clock to Port C */
+    movw    r3, #4096
+ 150:	f241 0300 	movw	r3, #4096	; 0x1000
+    movt    r3, #16386
+ 154:	f2c4 0302 	movt	r3, #16386	; 0x4002
+    ldr     r2, [r3, #24]
+ 158:	699a      	ldr	r2, [r3, #24]
+    orr     r2, r2, #16
+ 15a:	f042 0210 	orr.w	r2, r2, #16
+    str     r2, [r3, #24]
+ 15e:	619a      	str	r2, [r3, #24]
+
+    /* Turn LED off */
+    movw    r3, #4096
+ 160:	f241 0300 	movw	r3, #4096	; 0x1000
+    movt    r3, #16385
+ 164:	f2c4 0301 	movt	r3, #16385	; 0x4001
+    movw    r2, #4096
+ 168:	f241 0200 	movw	r2, #4096	; 0x1000
+    str     r2, [r3, #16]
+ 16c:	611a      	str	r2, [r3, #16]
+
+    ldr     r2, [r3, #4]    /* Change CRH pin 12 */
+ 16e:	685a      	ldr	r2, [r3, #4]
+    and     r2, r2, #4293984255
+ 170:	f422 2270 	bic.w	r2, r2, #983040	; 0xf0000
+    orr     r2, r2, #196608
+ 174:	f442 3240 	orr.w	r2, r2, #196608	; 0x30000
+    str     r2, [r3, #4]    /* MODE  = general purpose I/O, speed 50 Mhz */
+ 178:	605a      	str	r2, [r3, #4]
+
+    ldr     r2, [r3, #4]    /* Get CRH */
+ 17a:	685a      	ldr	r2, [r3, #4]
+
+0000017c <_flash_loop>:
+
+_flash_loop:
+    /* Turn LED on */
+    movw    r2, #4096
+ 17c:	f241 0200 	movw	r2, #4096	; 0x1000
+    str      r2, [r3, #20]
+ 180:	615a      	str	r2, [r3, #20]
+
+
+
+    movw    r4, #0
+ 182:	f240 0400 	movw	r4, #0
+    movt    r4, #20
+ 186:	f2c0 0414 	movt	r4, #20
+
+0000018a <delay1>:
+delay1:
+    sub.w   r4, r4, #1
+ 18a:	f1a4 0401 	sub.w	r4, r4, #1
+    cmp     r4, #0
+ 18e:	2c00      	cmp	r4, #0
+    bne     delay1
+ 190:	d1fb      	bne.n	18a <delay1>
+
+
+    /* Turn LED off */
+    movw    r2, #4096
+ 192:	f241 0200 	movw	r2, #4096	; 0x1000
+    str     r2, [r3, #16]
+ 196:	611a      	str	r2, [r3, #16]
+
+
+
+    movw    r4, #0
+ 198:	f240 0400 	movw	r4, #0
+    movt    r4, #3
+ 19c:	f2c0 0403 	movt	r4, #3
+
+000001a0 <delay2>:
+delay2:
+    sub.w   r4, r4, #1
+ 1a0:	f1a4 0401 	sub.w	r4, r4, #1
+    cmp     r4, #0
+ 1a4:	2c00      	cmp	r4, #0
+    bne     delay2
+ 1a6:	d1fb      	bne.n	1a0 <delay2>
+
+
+
+    B _flash_loop
+ 1a8:	e7e8      	b.n	17c <_flash_loop>
+
+000001aa <_handler>:
+
+
+
+_handler:
+    bx      lr    /* Return immediately */
+ 1aa:	4770      	bx	lr
+    nop
+ 1ac:	bf00      	nop
