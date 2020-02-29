@@ -1,0 +1,6 @@
+cu -l /dev/ttyS0 -s 19200
+nc localhost 9999
+make freertos_multithread_QEMURUN_TEL3
+cu -l /dev/pts/4 -s 115200
+
+
