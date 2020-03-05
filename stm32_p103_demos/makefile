@@ -72,6 +72,7 @@ DEMOS += rtc
 DEMOS += dac
 DEMOS += freertos_semaphore1 
 DEMOS += freertos_cycletask
+DEMOS += secyourdev
 
 # List all demo folders
 DEMO_FOLDERS = $(addprefix demos/,$(DEMOS))
@@ -94,12 +95,14 @@ PROG_TARGETS = $(addsuffix _PROG,$(DEMOS))
 
 QEMU_RUN_TARGETS = $(addsuffix _QEMURUN,$(DEMOS))
 QEMU_RUN_PTY_TARGETS = $(addsuffix _QEMURUN_PTY,$(DEMOS))
+QEMU_RUN_PTY3_TARGETS = $(addsuffix _QEMURUN_PTY3,$(DEMOS))
 QEMU_RUN_TEL_TARGETS = $(addsuffix _QEMURUN_TEL,$(DEMOS))
-QEMU_RUN_TEL2_TARGETS = $(addsuffix _QEMURUN_TEL2,$(DEMOS))
+QEMU_RUN_TEL3_TARGETS = $(addsuffix _QEMURUN_TEL3,$(DEMOS))
 QEMU_DBG_TARGETS = $(addsuffix _QEMUDBG,$(DEMOS))
 QEMU_DBG_PTY_TARGETS = $(addsuffix _QEMUDBG_PTY,$(DEMOS))
+QEMU_DBG_PTY3_TARGETS = $(addsuffix _QEMUDBG_PTY3,$(DEMOS))
 QEMU_DBG_TEL_TARGETS = $(addsuffix _QEMUDBG_TEL,$(DEMOS))
-QEMU_DBG_TEL2_TARGETS = $(addsuffix _QEMUDBG_TEL2,$(DEMOS))
+QEMU_DBG_TEL3_TARGETS = $(addsuffix _QEMUDBG_TEL3,$(DEMOS))
 
 
 
@@ -137,14 +140,18 @@ $(QEMU_RUN_TARGETS): %_QEMURUN : %_ALL
 $(QEMU_RUN_PTY_TARGETS): %_QEMURUN_PTY : %_ALL
 	-killall -q qemu-system-arm
 	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -kernel demos/$*/main.bin -serial pty
+
+$(QEMU_RUN_PTY3_TARGETS): %_QEMURUN_PTY3 : %_ALL
+	-killall -q qemu-system-arm
+	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -kernel demos/$*/main.bin -serial pty -serial pty -serial pty
 	
 $(QEMU_RUN_TEL_TARGETS): %_QEMURUN_TEL : %_ALL
 	-killall -q qemu-system-arm
 	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -kernel demos/$*/main.bin -serial tcp::7777,server
 
-$(QEMU_RUN_TEL2_TARGETS): %_QEMURUN_TEL2 : %_ALL
+$(QEMU_RUN_TEL3_TARGETS): %_QEMURUN_TEL3 : %_ALL
 	-killall -q qemu-system-arm
-	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -kernel demos/$*/main.bin -serial tcp::7777,server -serial tcp::8888,server
+	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -kernel demos/$*/main.bin -serial tcp::7777,server -serial tcp::8888,server -serial tcp::9999,server
 
 # QEMU debug targets
 $(QEMU_DBG_TARGETS): %_QEMUDBG : %_ALL
@@ -154,14 +161,18 @@ $(QEMU_DBG_TARGETS): %_QEMUDBG : %_ALL
 $(QEMU_DBG_PTY_TARGETS): %_QEMUDBG_PTY : %_ALL
 	-killall -q qemu-system-arm
 	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -gdb tcp::3333 -S -kernel demos/$*/main.bin -serial pty
+
+$(QEMU_DBG_PTY3_TARGETS): %_QEMUDBG_PTY3 : %_ALL
+	-killall -q qemu-system-arm
+	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -gdb tcp::3333 -S -kernel demos/$*/main.bin -serial pty -serial pty -serial pty
 	
 $(QEMU_DBG_TEL_TARGETS): %_QEMUDBG_TEL : %_ALL
 	-killall -q qemu-system-arm
 	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -gdb tcp::3333 -S -kernel demos/$*/main.bin -serial tcp::7777,server
 
-$(QEMU_DBG_TEL2_TARGETS): %_QEMUDBG_TEL2 : %_ALL
+$(QEMU_DBG_TEL3_TARGETS): %_QEMUDBG_TEL3 : %_ALL
 	-killall -q qemu-system-arm
-	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -gdb tcp::3333 -S -kernel demos/$*/main.bin -serial tcp::7777,server -serial tcp::8888,server
+	$(QEMU_ARM_DIR)qemu-system-arm -M stm32-p103 -gdb tcp::3333 -S -kernel demos/$*/main.bin -serial tcp::7777,server -serial tcp::8888,server -serial tcp::9999,server
 	
 # Note: Use this command to run QEMU in low-level debug mode:
 #    qemu-system-arm -cpu cortex-m3 -M stm32-p103 -nographic -singlestep -kernel main.bin -d in_asm,out_asm,exec,cpu,int,op,op_opt
@@ -300,3 +311,9 @@ demos/freertos_cycletask/main.elf: $(COMMON_FILES)
 demos/freertos_cycletask/main.elf: $(FREE_RTOS_SRC_FILES)
 demos/freertos_cycletask/main.elf: $(FREE_RTOS_SRC)/portable/MemMang/heap_1.c
 	$(CC) $(CFLAGS_LINK) -Idemos/freertos_cycletask/ -I$(FREE_RTOS_INC) -I$(FREE_RTOS_PORT_INC) -o $@ $^
+
+demos/secyourdev/main.elf: demos/secyourdev/main.c
+demos/secyourdev/main.elf: $(COMMON_FILES)
+demos/secyourdev/main.elf: $(FREE_RTOS_SRC_FILES)
+demos/secyourdev/main.elf: $(FREE_RTOS_SRC)/portable/MemMang/heap_1.c
+	$(CC) $(CFLAGS_LINK) -Idemos/secyourdev/ -I$(FREE_RTOS_INC) -I$(FREE_RTOS_PORT_INC) -o $@ $^

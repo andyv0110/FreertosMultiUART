@@ -77,8 +77,11 @@ void init_rs232(void)
     GPIO_InitTypeDef GPIO_InitStructure;
 
     /* Enable peripheral clocks. */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO | RCC_APB2Periph_USART1, ENABLE);
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO | RCC_APB2Periph_USART1, ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2 | RCC_APB1Periph_USART3, ENABLE);
+	
+    /* DMA clock enable */
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
  
     /* Configure USART1 Rx pin as floating input. */
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
@@ -88,6 +91,10 @@ void init_rs232(void)
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
+    /* Configure USART3 Rx pin as floating input. */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
 
     /* Configure USART1 Tx as alternate function push-pull. */
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
@@ -99,9 +106,14 @@ void init_rs232(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
+    /* Configure USAR3 Tx as alternate function push-pull. */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    /* Configure the USART2 */
-    USART_InitStructure.USART_BaudRate = 9600;
+    /* Configure the USART1 */
+    USART_InitStructure.USART_BaudRate = 115200;
     USART_InitStructure.USART_WordLength = USART_WordLength_8b;
     USART_InitStructure.USART_StopBits = USART_StopBits_1;
     USART_InitStructure.USART_Parity = USART_Parity_No;
@@ -111,7 +123,7 @@ void init_rs232(void)
     USART_Cmd(USART1, ENABLE);
 
     /* Configure the USART2 */
-    USART_InitStructure.USART_BaudRate = 9600;
+    USART_InitStructure.USART_BaudRate = 115200;
     USART_InitStructure.USART_WordLength = USART_WordLength_8b;
     USART_InitStructure.USART_StopBits = USART_StopBits_1;
     USART_InitStructure.USART_Parity = USART_Parity_No;
@@ -119,6 +131,17 @@ void init_rs232(void)
     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
     USART_Init(USART2, &USART_InitStructure);
     USART_Cmd(USART2, ENABLE);
+
+    /* Configure the USART3 */
+    USART_InitStructure.USART_BaudRate = 115200;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    USART_Init(USART3, &USART_InitStructure);
+    USART_Cmd(USART3, ENABLE);
+
 }
 
 void enable_rs232_interrupts(void)
@@ -133,9 +156,14 @@ void enable_rs232_interrupts(void)
     USART_ITConfig(USART2, USART_IT_TXE, DISABLE);
     USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 
-    /* Enable the USART1 IRQ in the NVIC module (so that the USART2 interrupt
+    /* Enable transmit and receive interrupts for the USART3. */
+    USART_ITConfig(USART3, USART_IT_TXE, DISABLE);
+    USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+
+    /* Enable the USART1 IRQ in the NVIC module (so that the USART1 interrupt
      * handler is enabled). */
     NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+    	//NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x02;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
@@ -143,6 +171,15 @@ void enable_rs232_interrupts(void)
     /* Enable the USART2 IRQ in the NVIC module (so that the USART2 interrupt
      * handler is enabled). */
     NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
+    	//NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x03;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+
+    /* Enable the USART3 IRQ in the NVIC module (so that the USART3 interrupt
+     * handler is enabled). */
+    NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
+    	//NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x04;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
@@ -153,6 +190,7 @@ void enable_rs232(void)
     /* Enable the RS232 port. */
     USART_Cmd(USART1, ENABLE);
     USART_Cmd(USART2, ENABLE);
+    USART_Cmd(USART3, ENABLE);
 }
 
 void rs232_print_str(const char *str)
@@ -188,6 +226,21 @@ void send_byte(uint8_t b)
     USART_SendData(USART2, b);
 }
 
+
+
+
+void send_byte_uart(USART_TypeDef* USARTx,uint8_t b)
+{
+    /* Wait until the RS232 port can receive another byte. */
+    while(USART_GetFlagStatus(USARTx, USART_FLAG_TXE) == RESET);
+
+    /* Toggle the LED just to show that progress is being made. */
+    GPIOC->ODR ^= 0x00001000;
+
+    /* Send the byte */
+    USART_SendData(USARTx, b);
+}
+
 void send_number(unsigned long sample, int radix)
 {
     int digit;
@@ -208,3 +261,4 @@ void send_number(unsigned long sample, int radix)
         USART_SendData(USART2, str[digit]);
     }
 }
+

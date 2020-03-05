@@ -26,7 +26,8 @@ void enable_rs232_interrupts(void);
 void enable_rs232(void);
 
 /* Functions for sending numbers through the UART */
-void send_byte(uint8_t b);
-void send_number(unsigned long sample, int radix);
+void send_byte_2(uint8_t b);
+void send_byte_uart(USART_TypeDef* USARTx,uint8_t b);
+void send_number_2(unsigned long sample, int radix);
 
 #endif /* __STM32_P103_H */

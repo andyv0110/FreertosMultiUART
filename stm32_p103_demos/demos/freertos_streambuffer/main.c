@@ -58,7 +58,7 @@ void sender_task(void *param)
             memset(buf,0xac,size);
             len = xStreamBufferSend(comm_sb,buf,size,portMAX_DELAY);
             usart_output("send\n\r");
-            vTaskDelay(30);
+            vTaskDelay(300);
         }
     }while(1);
 }
@@ -83,7 +83,7 @@ void reader_task(void *param)
             usart_output("recv: ");
             usart_output(buf);
             usart_output("\n\r\n\r");
-            vTaskDelay(50);
+            vTaskDelay(500);
         }
     }while(1);
 
